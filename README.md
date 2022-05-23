@@ -12,7 +12,7 @@ j d 618 活动 autojs脚本，
 按提示打开无障碍服务， 
 
 
-导入脚本start_jd.js 或 RASH.JS 都是autojs版本， 各有不同 ，自己觉得哪个好用选哪个
+导入脚本start_jd.js 或 RASH.JS 都是autojs脚本， 各有不同 ，自己觉得哪个好用选哪个
 
 原作者 
 https://github.com/MonsterNone/tmall-miao
