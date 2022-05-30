@@ -3,17 +3,10 @@ if (!auto.service) {
     exit()
 }
 
-let showVersion
-try {
-    showVersion = require('version.js').showVersion
-} catch(err) {
-    showVersion = function () {
-        console.log('无法加载version.js，获取版本失败。')
-    }
-}
+
 
 console.show()
-showVersion()
+
 
 function getSetting() {
     let indices = []
@@ -296,11 +289,12 @@ function doTask(task) {
             return rect.left > 0 && rect.top <= device.height
         })
 
-        if (!itemFilter.findOne(8000)) {
+        console.log('查找商品，等待至多6秒')
+        if (!itemFilter.findOne(6000)) {
             console.log('未能找到加购商品')
             return false
         }
-        console.log('查找商品')
+
         let items = itemFilter.find()
         if (items.empty() || items.length < 2) {
             console.log('查找商品失败')
@@ -410,8 +404,10 @@ try {
                     continue
                 }
                 if (!doTask(tasks[i])) {
-                    console.log('任务失败，退出')
-                    quit()
+                    // console.log('任务失败，退出')
+                    // quit()
+                    console.log('任务出现失败，换一个抽奖进行')
+                    break
                 }
                 sleep(5000)
             }
@@ -443,8 +439,11 @@ try {
 } catch (err) {
     device.cancelKeepingAwake()
     if (err.toString() != 'JavaException: com.stardust.autojs.runtime.exception.ScriptInterruptedException: null') {
-        startCoin && console.log('本次任务开始时有' + startCoin + '金币')
         console.error(new Error().stack, err)
+        startCoin && console.log('本次任务开始时有' + startCoin + '金币')
     }
-    showVersion()
+    
 }
+
+
+
