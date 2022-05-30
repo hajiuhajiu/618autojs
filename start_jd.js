@@ -3,7 +3,17 @@ if (!auto.service) {
     exit()
 }
 
+let showVersion
+try {
+    showVersion = require('version.js').showVersion
+} catch(err) {
+    showVersion = function () {
+        console.log('无法加载version.js，获取版本失败。请前往https://github.com/monsternone/tmall-miao下载。')
+    }
+}
+
 console.show()
+//showVersion()
 
 function getSetting() {
     let indices = []
@@ -245,14 +255,14 @@ function timeTask() {
     while (c < 40) { // 0.5 * 40 = 20 秒，防止死循环
         if ((textMatches(/获得.*?金币/).exists() || descMatches(/获得.*?金币/).exists())) // 等待已完成出现
             break
-        if ((textMatches(/已达上限/).exists() || descMatches(/已达上限/).exists())) { // 失败
+        if ((textMatches(/已浏览/).exists() || descMatches(/已浏览/).exists())) { // 失败
             console.log('上限，返回刷新任务列表')
             return false
         }
 
         // 弹窗处理
-        let pop = text('升级开卡会员领好礼').exists()
-        if (pop) {
+        let pop = text('升级开卡会员领好礼')
+        if (pop.exists()) {
             pop.parent().parent().child(2).click()
             console.log('关闭会员弹窗')
         }
@@ -435,7 +445,7 @@ function viewTask() {
 function wallTask() {
     console.log('进行品牌墙任务')
     sleep(3000)
-    for (let i of [2, 4, 5, 7, 8]) { // 选5个
+    for (let i of [2, 3, 4, 5, 6]) { // 选5个
         console.log('打开一个')
         textContains('!q70').boundsInside(0, 0, device.width, device.height).findOnce(i).click()
         sleep(5000)
@@ -575,7 +585,6 @@ try {
         sleep(2000)
 
         openTaskList();
-        sleep(5000)
     } else {
         alert('请关闭弹窗后立刻手动打开京东App进入活动页面，并打开任务列表', '限时30秒')
         console.log('请手动打开京东App进入活动页面，并打开任务列表')
@@ -584,9 +593,9 @@ try {
             quit()
         }
         console.log('成功进入活动')
-        sleep(2000)
     }
 
+    sleep(5000)
 
     try {
         console.log('获取初始金币数量')
@@ -657,7 +666,8 @@ try {
 } catch (err) {
     device.cancelKeepingAwake()
     if (err.toString() != 'JavaException: com.stardust.autojs.runtime.exception.ScriptInterruptedException: null') {
-        startCoin && console.log('本次任务开始时有' + startCoin + '金币')
         console.error(new Error().stack, err)
+        startCoin && console.log('本次任务开始时有' + startCoin + '金币')
     }
+    //showVersion()
 }
